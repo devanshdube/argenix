@@ -1,0 +1,25 @@
+CREATE DATABASE argenix;
+
+USE DATABASE argenix;
+
+CREATE TABLE data_sources (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  source_name VARCHAR(100) NOT NULL,
+  description TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE realtime_data (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  source_id INT NOT NULL,
+  event_type VARCHAR(50),
+  payload JSON NOT NULL,
+  received_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (source_id) REFERENCES data_sources(id),
+
+  INDEX idx_received_at (received_at),
+  INDEX idx_source_time (source_id, received_at)
+);
+
